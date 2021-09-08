@@ -61,5 +61,14 @@ userSchema.methods.generateToken = async function () {
    return user.save();
 }
 
+userSchema.methods.comparePassword = function (candidatePassword) {
+   var user = this;
+   //bcrypt uses Promises
+   return bcrypt.compare(candidatePassword, user.password).then(function (result) {
+      return result
+   });
+}
+
+
 const User = mongoose.model('User', userSchema);
 module.exports = { User }
