@@ -18,6 +18,7 @@ module.exports = {
             }
 
             // User must be right, log in
+            // Generates a new token, and saves the user (in the generateToken method that we have implemented)
             const getToken = await user.generateToken();
             if (!getToken) {
                throw new AuthenticationError('Something went wrong, try again');

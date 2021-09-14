@@ -53,6 +53,7 @@ userSchema.pre('save', function (next) {
 
 userSchema.methods.generateToken = async function () {
    var user = this;
+   // Create a hash of the id and the email
    var token = jwt.sign({ _id: user._id, email: user.email }, process.env.SECRET, {
       expiresIn: '7d'
    });
