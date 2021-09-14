@@ -89,6 +89,34 @@ module.exports = {
             throw err
          }
       },
+      updateUserEmailPass: async (parent, args, context, info) => {
+         const { email, password, _id } = args;
+         const { req: req1 } = context;
+
+         try {
+            const req = authorize(req1); /* check if the user has a valid token*/
+
+            if (!userOwnership(req, _id)) /* check if the user owns the document it wants to update*/
+               throw new AuthenticationError("You dont own this user");
+
+            const user = await User.findOne({ _id: req._id });
+            if (!user) throw new AuthenticationError("Sorry, try again");
+
+            //// validate fields, please
+            if (email) { user.email = email }
+            if (password) { user.password = password }
+
+            /// USER IS RIGHT, GENERATE TOKEN
+            const getToken = await user.generateToken(); /*getToken is a user (in which it adds at token) */
+            if (!getToken) {
+               throw new AuthenticationError('Something went wrong, try again');
+            }
+
+            return { ...getToken._doc, token: getToken.token }
+         } catch (err) {
+            throw new ApolloError('Something went wrong, try again', err);
+         }
+      }
    }
 }
 
