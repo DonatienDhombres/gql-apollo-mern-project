@@ -1,5 +1,9 @@
 const { User } = require('../../models/user');
 const { UserInputError, AuthenticationError, ApolloError } = require('apollo-server-express')
+const authorize = require('../../utils/isAuth');
+const { userOwnership } = require('../../utils/tools');
+
+
 
 module.exports = {
    Mutation: {
@@ -59,6 +63,30 @@ module.exports = {
             }
             throw err
 
+         }
+      },
+      updateUserProfile: async (parent, args, context, info) => {
+         const { name, lastname, _id } = args;
+         const { req: req1 } = context;
+         try {
+            const req = authorize(req1) /* authorize va return la req si on a un token valide dans le req.headers */
+
+            if (!userOwnership(req, _id)) { /*userOwnership renvoie true ou false selon que request.id == id càd, la req a été envoyée par le bon user*/
+               throw new AuthenticationError("You dont own this user");
+            }
+
+            const user = await User.findOne({ '_id': _id });
+            if (!user) {
+               throw new AuthenticationError('no user');
+            }
+
+            // Normally, should validate fields before using (name, lastname) 
+            user.name = name;
+            user.lastname = lastname;
+            await user.save();
+            return { ...user._doc };
+         } catch (err) {
+            throw err
          }
       },
    }
