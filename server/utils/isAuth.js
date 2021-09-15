@@ -47,3 +47,4 @@ const authorize = (req, verify = false) => {
 }
 
 module.exports = authorize;
+

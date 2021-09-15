@@ -1,5 +1,6 @@
 const { User } = require('../../models/user');
 const { Post } = require('../../models/post');
+const { Category } = require('../../models/category');
 const { UserInputError, AuthenticationError, ApolloError } = require('apollo-server-express')
 const authorize = require('../../utils/isAuth');
 const { userOwnership } = require('../../utils/tools');
@@ -135,6 +136,26 @@ module.exports = {
             });
 
             const result = await post.save();
+            return { ...result._doc };
+
+         } catch (err) {
+            throw err
+         }
+      },
+      createCategory: async (parent, args, context, info) => {
+         const { name } = args;
+         const { req: req1 } = context;
+
+         try {
+            const req = authorize(req1) /* authorize va return la req si on a un token valide dans le req.headers */
+
+            // Should validate fields here
+            const category = new Category({
+               name: name,
+               author: req._id
+            });
+
+            const result = await category.save();
             return { ...result._doc };
 
          } catch (err) {
