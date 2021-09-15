@@ -11,6 +11,19 @@ const typeDefs = gql`
     updateUserProfile(name:String,lastname:String,_id:ID!):User!
     authUser(fields:AuthInput!):User!
     signUp(fields:AuthInput!):User!
+    createPost(fields:PostInput!):Post!
+  }
+
+
+  type Post{
+    _id:ID!
+    created_at: String
+    updated_at: String
+    title: String!
+    excerpt: String!
+    content: String!
+    author: User!
+    status: PostStatus
   }
 
   type User {
@@ -26,6 +39,19 @@ const typeDefs = gql`
     email:String!
     password:String!
   }
+
+  input PostInput {
+        title: String
+        excerpt: String
+        content: String
+        status: PostStatus
+    }
+
+  enum PostStatus {
+      PUBLIC,
+      DRAFT
+  }
+
 `;
 
 module.exports = typeDefs;
