@@ -1,4 +1,5 @@
 const { User } = require('../../models/user');
+const { Post } = require('../../models/post');
 const { UserInputError, AuthenticationError, ApolloError } = require('apollo-server-express')
 const authorize = require('../../utils/isAuth');
 const { userOwnership } = require('../../utils/tools');
@@ -115,6 +116,29 @@ module.exports = {
             return { ...getToken._doc, token: getToken.token }
          } catch (err) {
             throw new ApolloError('Something went wrong, try again', err);
+         }
+      },
+      createPost: async (parent, args, context, info) => {
+         const { title, excerpt, content, status } = args.fields;
+         const { req: req1 } = context;
+
+         try {
+            const req = authorize(req1) /* authorize va return la req si on a un token valide dans le req.headers */
+
+            // Should validate fields here
+            const post = new Post({
+               title: title,
+               excerpt: excerpt,
+               content: content,
+               status: status,
+               author: req._id
+            });
+
+            const result = await post.save();
+            return { ...result._doc };
+
+         } catch (err) {
+            throw err
          }
       }
    }
