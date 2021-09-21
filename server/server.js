@@ -8,6 +8,8 @@ const db = config.get('mongoURI');
 const typeDefs = require('./graphql/schema')
 const { Query } = require('./graphql/resolvers/query')
 const { Mutation } = require('./graphql/resolvers/mutation')
+const { User } = require('./graphql/resolvers/user');
+
 
 
 const app = express();
@@ -15,7 +17,8 @@ const server = new ApolloServer({
    typeDefs,
    resolvers: {
       Query,
-      Mutation
+      Mutation,
+      User
    },
    context: ({ req, res }) => {
       req.headers.authorization = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTQyMGY0NGIzMTY3YjUyMDg3ZThhYjAiLCJlbWFpbCI6InRhcmF0YXRhMTFAbWFpbC5jb20iLCJpYXQiOjE2MzE3MTkyMzYsImV4cCI6MTYzMjMyNDAzNn0.ADVI9GzxOpjrk8xcFPizXK1hz-TJdtZGkLrwuUVtoFE';

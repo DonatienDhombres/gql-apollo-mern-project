@@ -120,7 +120,7 @@ module.exports = {
          }
       },
       createPost: async (parent, args, context, info) => {
-         const { title, excerpt, content, status } = args.fields;
+         const { title, excerpt, content, status, category } = args.fields;
          const { req: req1 } = context;
 
          try {

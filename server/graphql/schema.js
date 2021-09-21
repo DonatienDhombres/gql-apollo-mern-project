@@ -23,8 +23,9 @@ const typeDefs = gql`
     title: String!
     excerpt: String!
     content: String!
-    author: User!
     status: PostStatus
+    author: User!
+    category: Category!
   }
 
   type User {
@@ -34,6 +35,8 @@ const typeDefs = gql`
     name:String 
     lastname:String 
     token:String
+    posts:[Post!]!
+    categories:[Category!]!
   }
 
   input AuthInput {
@@ -46,6 +49,7 @@ const typeDefs = gql`
     excerpt: String
     content: String
     status: PostStatus
+    category: ID
     }
 
   enum PostStatus {
@@ -63,3 +67,4 @@ const typeDefs = gql`
 `;
 
 module.exports = typeDefs;
+
