@@ -4,6 +4,7 @@ const typeDefs = gql`
   type Query {
     user(id:ID!):User!
     isAuth:User!
+    categories(catId:ID):[Category]!
   }
 
   type Mutation {

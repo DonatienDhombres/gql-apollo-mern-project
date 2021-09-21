@@ -132,7 +132,8 @@ module.exports = {
                excerpt: excerpt,
                content: content,
                status: status,
-               author: req._id
+               author: req._id,
+               category: category
             });
 
             const result = await post.save();
