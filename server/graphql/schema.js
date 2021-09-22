@@ -38,7 +38,7 @@ const typeDefs = gql`
     name:String 
     lastname:String 
     token:String
-    posts:[Post!]!
+    posts(sort:SortInput):[Post!]!
     categories:[Category!]!
   }
 
