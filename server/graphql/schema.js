@@ -4,6 +4,8 @@ const typeDefs = gql`
   type Query {
     user(id:ID!):User!
     isAuth:User!
+    post(id:ID!):Post!
+    posts(sort:SortInput,queryBy:QueryByInput):[Post]!
     categories(catId:ID):[Category]!
   }
 
@@ -40,6 +42,13 @@ const typeDefs = gql`
     categories:[Category!]!
   }
 
+  type Category { 
+    _id: ID!
+    name: String!
+    author: User!
+    posts: [Post]
+  }
+
   input AuthInput {
     email:String!
     password:String!
@@ -51,18 +60,23 @@ const typeDefs = gql`
     content: String
     status: PostStatus
     category: ID
-    }
+  }
+
+  input SortInput {
+    sortBy: String
+    order: String
+    limit: Int
+    skip: Int
+  }
+
+  input QueryByInput {
+    key:String!
+    value:String!
+  }
 
   enum PostStatus {
     PUBLIC,
     DRAFT
-  }
-
-  type Category { 
-    _id: ID!
-    name: String!
-    author: User!
-    posts: [Post]
   }
 
 `;

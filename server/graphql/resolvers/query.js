@@ -1,7 +1,10 @@
 const { AuthenticationError } = require('apollo-server-express')
 const { User } = require('../../models/user');
+const { Post } = require('../../models/post');
 const { Category } = require('../../models/category');
 const authorize = require('../../utils/isAuth');
+const { sortArgsHelper } = require('../../utils/tools');
+
 
 
 module.exports = {
@@ -52,6 +55,40 @@ module.exports = {
          } catch (err) {
             throw err;
          }
+      },
+      post: async (parent, args, context, info) => {
+         const { id } = args;
+         try {
+            const post = await Post.findById(id);
+            return post;
+         } catch (err) {
+            throw err;
+         }
+      },
+      posts: async (parent, args, context, info) => {
+         const { sort, queryBy } = args;
+         try {
+            let queryArgs = {};
+            if (queryBy) {
+               const { key, value } = queryBy
+               queryArgs[key] = value;
+            };
+
+            let sortArgs = sortArgsHelper(sort)
+            // console.log(sortArgs)
+
+            const { sortBy, order, limit, skip } = sortArgs;
+
+            const posts = await Post
+               .find(queryArgs)
+               .sort([[sortBy, order]])
+               .skip(skip)
+               .limit(limit);
+            return posts;
+         } catch (err) {
+            throw err;
+         }
       }
    }
 }
+
