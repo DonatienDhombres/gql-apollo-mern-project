@@ -162,6 +162,37 @@ module.exports = {
          } catch (err) {
             throw err
          }
+      },
+      updatePost: async (parent, args, context, info) => {
+         const { fields, _id } = args;
+         const { req: req1 } = context;
+
+         const post = await Post.findById(_id);
+         const authorID = post.author;
+
+
+         try {
+            const req = authorize(req1) /* authorize va return la req si on a un token valide dans le req.headers */
+
+            //Checker que le post author est bien notre user
+            if (!userOwnership(req, authorID)) { /*userOwnership renvoie true ou false selon que request.id == id càd, la req a été envoyée par le bon user*/
+               throw new AuthenticationError("You dont own this user");
+            }
+
+            // Should validate fields here
+            // const { title, excerpt, content, status, category } = fields;
+            const keys = Object.keys(fields);
+            keys.forEach(key => {
+               // post.key = fields.key        /* fonctionne pas car key n'est pas une string, c'est unr variable*/
+               post[key] = fields[key]      /* fonctionne */
+            })
+
+            const result = await post.save();
+            return { ...result._doc };
+
+         } catch (err) {
+            throw new ApolloError('Something went wrong, try again', err);
+         }
       }
    }
 }
