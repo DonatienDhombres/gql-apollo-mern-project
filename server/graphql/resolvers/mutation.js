@@ -214,6 +214,38 @@ module.exports = {
          } catch (err) {
             throw new ApolloError('Something went wrong, try again', err);
          }
+      },
+      updateCategory: async (parent, args, context, info) => {
+         const { name, _id } = args;
+         const { req: req1 } = context;
+
+         try {
+            const req = authorize(req1) /* authorize va return la req si on a un token valide dans le req.headers */
+
+            const category = await Category.findOne({ "_id": _id });  /* me rend un JSON */
+            if (name) category["name"] = name;
+
+            const result = await category.save();
+            return result;
+
+         } catch (err) {
+            throw new ApolloError('Something went wrong, try again', err);
+         }
+      },
+      deleteCategory: async (parent, args, context, info) => {
+         const { _id } = args;
+         const { req: req1 } = context;
+         try {
+            const category = await Category.findByIdAndRemove(_id);
+            if (!category) return 'Category not found'
+
+            const req = authorize(req1) /* authorize va return la req si on a un token valide dans le req.headers */
+
+            return 'Your category have been deleted'
+
+         } catch (err) {
+            throw new ApolloError('Something went wrong, try again', err);
+         }
       }
    }
 }
