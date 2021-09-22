@@ -193,6 +193,27 @@ module.exports = {
          } catch (err) {
             throw new ApolloError('Something went wrong, try again', err);
          }
+      },
+      deletePost: async (parent, args, context, info) => {
+         const { _id } = args;
+         const { req: req1 } = context;
+         try {
+            const post = await Post.findByIdAndRemove(_id);
+            if (!post) return 'Post not found'
+            const authorID = post.author;
+
+            const req = authorize(req1) /* authorize va return la req si on a un token valide dans le req.headers */
+            //Checker que le post author est bien notre user
+            if (!userOwnership(req, authorID)) { /*userOwnership renvoie true ou false selon que request.id == id càd, la req a été envoyée par le bon user*/
+               throw new AuthenticationError("You dont own this user");
+            }
+
+            const result = await Post.deleteOne({ "_id": _id })
+            return 'Your post have been deleted'
+
+         } catch (err) {
+            throw new ApolloError('Something went wrong, try again', err);
+         }
       }
    }
 }
