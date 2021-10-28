@@ -1,16 +1,15 @@
-A basic social network project 
+A basic social network web app project  
+My aim in this project was to develop a GraphQL backend with Node.js & Express  
 
-My aim in this project was to learn **GraphQL**, so I worked mainly on the backend  
--	Used queries and mutations
--	Worked on a server with Express (to be more acurate, with apollo-server-express)
--	Used MongoDB for database
-- Used jsonwebtoken for user permission 
-
+Stacks used :
+-	GraphQL
+-	Node.js, Express, Apollo (apollo-server-express) : server
+-	MongoDB : database
+-	jsonwebtoken, bcrypt : Protect queries and mutations
 
 Functionalities of this social network backend project :
-  - Sign in and sign up users
-  -	Oauth and bcrypt for security
-  -	Update name of users, as well as password and email 
-  -	Create and mutate posts : update posts, delete posts
-  -	Create and mutate categories, and added relationship between posts and categories
-  - For every query and mutation, when needed I ensured that the user had the right token (jsonwebtoken)
+-	Login with Facebook and Google Oauth
+-	Create, update users (name, as well as password and email in a protected way)
+-	Create, update, delete posts 
+-	Create, update categories, and added relationship between posts and categories
+
